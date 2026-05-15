@@ -47,11 +47,26 @@
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
       }
+      /* Custom Scrollbar untuk area konten */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: rgba(203, 213, 225, 0.6);
+        border-radius: 20px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(148, 163, 184, 0.9);
+      }
+
       /* Animasi masuk bertahap untuk kartu */
       @keyframes fadeInUp {
         from {
           opacity: 0;
-          transform: translateY(20px);
+          transform: translateY(15px);
         }
         to {
           opacity: 1;
@@ -59,18 +74,23 @@
         }
       }
       .animate-fade-in {
-        animation: fadeInUp 0.5s ease-out forwards;
+        animation: fadeInUp 0.4s ease-out forwards;
         opacity: 0;
       }
     </style>
   </head>
-  <body class="text-slate-800 antialiased min-h-screen flex flex-col">
-    <!-- Header / Hero Section -->
+  <!-- Mengubah body menjadi min-h-screen agar menggunakan scroll natural bawaan browser -->
+  <body
+    class="text-slate-800 antialiased min-h-screen flex flex-col bg-slate-50"
+  >
+    <!-- Header / Hero Section (Dibuat sticky agar menempel mulus di atas saat di-scroll) -->
     <header
-      class="bg-gradient-to-br from-orange-400 via-orange-300 to-orange-200 text-white relative overflow-hidden pb-24 pt-12 shadow-md"
+      class="bg-gradient-to-br from-orange-400 via-orange-300 to-orange-200 text-white sticky top-0 flex-shrink-0 shadow-md pt-6 lg:pt-8 z-40"
     >
       <!-- Dekorasi Latar Belakang -->
-      <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+      <div
+        class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none"
+      >
         <div
           class="absolute -top-24 -left-24 w-96 h-96 bg-white opacity-40 rounded-full blur-3xl"
         ></div>
@@ -80,98 +100,98 @@
       </div>
 
       <div class="container mx-auto px-6 relative z-10">
-        <div class="flex items-center justify-between mb-8">
-          <div class="flex items-center">
-            <!-- Menampilkan Logo SE 2026 dengan efek mix-blend-screen agar background hitamnya menyatu transparan -->
+        <!-- Flex container: Susunan vertikal di HP, sejajar kiri-kanan di Laptop -->
+        <div
+          class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 lg:pb-8"
+        >
+          <!-- Kiri: Logo dan Judul -->
+          <div class="flex items-center gap-4 md:gap-5">
             <img
               src="Logo_Sensus_Ekonomi_2026-removebg-preview.png"
               alt="Logo Sensus Ekonomi 2026"
-              class="w-32 h-32 md:w-30 md:h-30 mix-blend-screen object-contain drop-shadow-sm transition-transform hover:scale-105"
+              class="w-20 h-20 md:w-24 md:h-24 mix-blend-screen object-contain drop-shadow-sm flex-shrink-0 transition-transform hover:scale-105"
             />
+            <div>
+              <h2
+                class="text-2xl md:text-3xl font-extrabold leading-tight mb-1 drop-shadow-md"
+              >
+                Kumpulan Tautan<br />Sensus Ekonomi 2026
+              </h2>
+              <p
+                class="text-orange-50 font-medium text-sm md:text-base drop-shadow-sm"
+              >
+                Kabupaten Parigi Moutong
+              </p>
+            </div>
+          </div>
+
+          <!-- Kanan: Search Bar -->
+          <div
+            class="w-full lg:w-[400px] xl:w-[480px] flex-shrink-0 mt-2 lg:mt-0"
+          >
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+              >
+                <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+              </div>
+              <input
+                type="text"
+                id="searchInput"
+                class="w-full bg-white text-slate-900 rounded-xl py-3.5 pl-12 pr-4 shadow-lg focus:outline-none focus:ring-4 focus:ring-orange-500/30 transition-all text-base placeholder-slate-400 border-0"
+                placeholder="Cari formulir, link, atau dokumen..."
+              />
+            </div>
           </div>
         </div>
 
-        <div class="max-w-3xl mt-4">
-          <h2
-            class="text-4xl md:text-5xl font-extrabold leading-tight mb-4 drop-shadow-md"
-          >
-            Kumpulan Tautan<br />Sensus Ekonomi 2026<br /><span
-              class="text-orange-50"
-              >Kabupaten Parigi Moutong</span
-            >
-          </h2>
-          <p
-            class="text-orange-50 text-lg md:text-xl mb-8 font-medium drop-shadow-sm"
-          >
-            Akses seluruh dokumen, formulir, dan sistem panduan dengan cepat dan
-            mudah dalam satu tempat terpadu.
-          </p>
-
-          <!-- Search Bar -->
-          <div class="relative max-w-xl">
-            <div
-              class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
-            >
-              <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
-            </div>
-            <input
-              type="text"
-              id="searchInput"
-              class="w-full bg-white text-slate-900 rounded-xl py-4 pl-12 pr-4 shadow-xl focus:outline-none focus:ring-4 focus:ring-brand-500/30 transition-all text-lg placeholder-slate-400"
-              placeholder="Cari formulir, link, atau dokumen..."
-            />
-          </div>
+        <!-- Filter Kategori (Dipindah ke Header bagian bawah) -->
+        <div
+          class="flex gap-2 overflow-x-auto pb-4 scrollbar-hide"
+          id="category-filters"
+        >
+          <!-- Filter tombol akan di-render melalui JS -->
         </div>
       </div>
     </header>
 
-    <!-- Main Content Grid -->
-    <main class="flex-grow container mx-auto px-6 relative z-20 -mt-16 mb-20">
-      <!-- Statistik Kecil (Opsional) -->
-      <div
-        class="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide"
-        id="category-filters"
-      >
-        <!-- Filter tombol akan di-render melalui JS -->
-      </div>
-
-      <!-- Area Grid Link -->
-      <div
-        id="linksContainer"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-      >
-        <!-- Kartu akan di-render di sini oleh JavaScript -->
-      </div>
-
-      <!-- State Kosong (Ketika pencarian tidak ditemukan) -->
-      <div
-        id="emptyState"
-        class="hidden flex-col items-center justify-center py-20 text-center"
-      >
+    <!-- Main Content Area -->
+    <main class="flex-grow relative z-10 w-full">
+      <div class="container mx-auto px-6 py-6 lg:py-8 relative z-20">
+        <!-- Area Grid Link (Lebih ringkas) -->
         <div
-          class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 text-4xl mb-4"
+          id="linksContainer"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
         >
-          <i class="fa-solid fa-folder-open"></i>
+          <!-- Kartu akan di-render di sini oleh JavaScript -->
         </div>
-        <h3 class="text-xl font-bold text-slate-700 mb-2">
-          Tautan tidak ditemukan
-        </h3>
-        <p class="text-slate-500 max-w-md mx-auto">
-          Kami tidak dapat menemukan tautan yang cocok dengan kata kunci
-          pencarian Anda. Coba kata kunci lain.
-        </p>
+
+        <!-- State Kosong (Ketika pencarian tidak ditemukan) -->
+        <div
+          id="emptyState"
+          class="hidden flex-col items-center justify-center py-16 text-center"
+        >
+          <div
+            class="w-20 h-20 bg-slate-200/50 rounded-full flex items-center justify-center text-slate-400 text-3xl mb-4"
+          >
+            <i class="fa-solid fa-folder-open"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-700 mb-1">
+            Tautan tidak ditemukan
+          </h3>
+          <p class="text-slate-500 text-sm max-w-sm mx-auto">
+            Kami tidak dapat menemukan tautan yang cocok dengan kata kunci Anda.
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <footer
+          class="mt-16 pt-6 border-t border-slate-200/60 text-center text-slate-400 text-sm"
+        >
+          <p>&copy; 2026 Portal Sensus Ekonomi Kabupaten Parigi Moutong.</p>
+        </footer>
       </div>
     </main>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-8 mt-auto">
-      <div class="container mx-auto px-6 text-center text-slate-500">
-        <p>
-          &copy; 2026 Portal Sensus Ekonomi Kabupaten Parigi Moutong. Dirancang
-          untuk kemudahan akses petugas dan mitra.
-        </p>
-      </div>
-    </footer>
 
     <!-- JavaScript Data dan Logika -->
     <script>
@@ -307,29 +327,30 @@
           emptyState.classList.remove("flex");
 
           data.forEach((item, index) => {
-            const delay = index * 0.05; // Efek stagger (berurutan)
+            const delay = index * 0.04; // Efek stagger
             const card = document.createElement("div");
-            card.className = `glass-card rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full animate-fade-in`;
+            // Mengubah padding dari p-6 ke p-5 agar lebih efisien tempat
+            card.className = `glass-card rounded-2xl p-5 shadow-sm hover:shadow-lg hover:border-orange-200 transition-all duration-300 hover:-translate-y-1 flex flex-col h-full animate-fade-in`;
             card.style.animationDelay = `${delay}s`;
 
             card.innerHTML = `
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="w-12 h-12 rounded-xl ${item.bgClass} flex items-center justify-center text-xl">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="w-10 h-10 rounded-xl ${item.bgClass} flex items-center justify-center text-lg">
                                 <i class="fa-solid ${item.icon} ${item.colorClass}"></i>
                             </div>
-                            <span class="text-xs font-bold px-3 py-1 rounded-full ${item.badgeClass}">
+                            <span class="text-[11px] font-bold px-2.5 py-1 rounded-full ${item.badgeClass}">
                                 ${item.category}
                             </span>
                         </div>
-                        <h3 class="text-lg font-bold text-slate-800 leading-tight mb-2 line-clamp-2" title="${item.title}">
+                        <h3 class="text-base font-bold text-slate-800 leading-tight mb-1.5 line-clamp-2" title="${item.title}">
                             ${item.title}
                         </h3>
-                        <p class="text-slate-500 text-sm mb-6 flex-grow line-clamp-2">
+                        <p class="text-slate-500 text-[13px] mb-5 flex-grow line-clamp-2">
                             ${item.desc}
                         </p>
                         <a href="${item.url}" target="_blank" rel="noopener noreferrer" 
-                           class="w-full py-3 px-4 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-xl hover:bg-slate-50 hover:text-brand-600 hover:border-brand-300 transition-colors flex items-center justify-center gap-2 group">
-                            <span>Buka Tautan</span>
+                           class="w-full py-2.5 px-4 bg-white border border-slate-200 text-slate-600 text-sm font-bold rounded-xl hover:bg-orange-50 hover:text-orange-600 hover:border-orange-300 transition-colors flex items-center justify-center gap-2 group shadow-sm">
+                            <span>Akses Tautan</span>
                             <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"></i>
                         </a>
                     `;
@@ -345,7 +366,7 @@
           const btn = document.createElement("button");
           const isActive = activeFilter === cat;
 
-          btn.className = `whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-sm ${
+          btn.className = `whitespace-nowrap px-4 py-1.5 rounded-full text-[13px] font-bold transition-all shadow-sm ${
             isActive
               ? "bg-orange-500 text-white shadow-orange-500/40"
               : "bg-white text-slate-600 hover:bg-orange-50 hover:text-orange-600 border border-slate-200"
