@@ -151,9 +151,30 @@
           </div>
         </div>
 
-        <!-- Kumpulan Filter Kategori dan Sorting -->
+        <!-- Tabs Navigation -->
         <div
-          class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4"
+          class="flex gap-2 mb-4 border-b border-slate-200/60 overflow-x-auto scrollbar-hide"
+        >
+          <button
+            id="tab-links"
+            class="tab-button active px-4 py-3 text-sm font-bold text-slate-700 border-b-2 border-orange-500 hover:text-orange-600 transition-colors whitespace-nowrap"
+            data-tab="links"
+          >
+            <i class="fa-solid fa-link mr-2"></i>Tautan & Dokumen
+          </button>
+          <button
+            id="tab-peserta"
+            class="tab-button px-4 py-3 text-sm font-bold text-slate-500 border-b-2 border-transparent hover:text-slate-700 transition-colors whitespace-nowrap"
+            data-tab="peserta"
+          >
+            <i class="fa-solid fa-users mr-2"></i>Peserta Pelatihan
+          </button>
+        </div>
+
+        <!-- Kumpulan Filter Kategori dan Sorting (untuk Links tab) -->
+        <div
+          class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 tab-content"
+          id="links-filter"
         >
           <!-- Filter Kategori -->
           <div
@@ -195,30 +216,128 @@
     <!-- Main Content Area -->
     <main class="flex-grow relative z-10 w-full">
       <div class="container mx-auto px-6 py-6 lg:py-8 relative z-20">
-        <!-- Area Grid Link -->
-        <div
-          id="linksContainer"
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
-        >
-          <!-- Kartu akan di-render di sini oleh JavaScript -->
+        <!-- Area Grid Link (Links Tab) -->
+        <div id="links-tab" class="tab-content">
+          <div
+            id="linksContainer"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
+          >
+            <!-- Kartu akan di-render di sini oleh JavaScript -->
+          </div>
+
+          <!-- State Kosong (Ketika pencarian tidak ditemukan) -->
+          <div
+            id="emptyState"
+            class="hidden flex-col items-center justify-center py-16 text-center"
+          >
+            <div
+              class="w-20 h-20 bg-slate-200/50 rounded-full flex items-center justify-center text-slate-400 text-3xl mb-4"
+            >
+              <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-700 mb-1">
+              Tautan tidak ditemukan
+            </h3>
+            <p class="text-slate-500 text-sm max-w-sm mx-auto">
+              Kami tidak dapat menemukan tautan yang cocok dengan kata kunci
+              Anda.
+            </p>
+          </div>
         </div>
 
-        <!-- State Kosong (Ketika pencarian tidak ditemukan) -->
-        <div
-          id="emptyState"
-          class="hidden flex-col items-center justify-center py-16 text-center"
-        >
-          <div
-            class="w-20 h-20 bg-slate-200/50 rounded-full flex items-center justify-center text-slate-400 text-3xl mb-4"
-          >
-            <i class="fa-solid fa-folder-open"></i>
+        <!-- Peserta Pelatihan Tab -->
+        <div id="peserta-tab" class="tab-content hidden">
+          <div class="glass-card rounded-2xl p-6 shadow-sm">
+            <div class="mb-4 flex items-center justify-between">
+              <h3 class="text-lg font-bold text-slate-800">
+                Database Peserta Pelatihan Petugas SE 2026
+              </h3>
+              <div class="flex gap-2">
+                <button
+                  id="refresh-peserta"
+                  class="px-3 py-2 bg-orange-100 text-orange-600 text-sm font-bold rounded-lg hover:bg-orange-200 transition-colors flex items-center gap-2"
+                >
+                  <i class="fa-solid fa-rotate-right"></i> Perbarui
+                </button>
+                <a
+                  href="https://docs.google.com/spreadsheets/d/1NilGlFr3daw2phQJMRr-HU-3mi3i0gOazyHvNZ-n9-8/edit?gid=0#gid=0"
+                  target="_blank"
+                  class="px-3 py-2 bg-blue-100 text-blue-600 text-sm font-bold rounded-lg hover:bg-blue-200 transition-colors flex items-center gap-2"
+                >
+                  <i class="fa-solid fa-external-link"></i> Buka Spreadsheet
+                </a>
+              </div>
+            </div>
+
+            <div id="pesertaLoading" class="text-center py-8">
+              <i
+                class="fa-solid fa-spinner fa-spin text-orange-500 text-2xl mb-3"
+              ></i>
+              <p class="text-slate-600">Memuat data peserta...</p>
+            </div>
+
+            <div id="pesertaContainer" class="hidden">
+              <div class="overflow-x-auto">
+                <table id="pesertaTable" class="w-full text-sm">
+                  <thead>
+                    <tr class="border-b-2 border-slate-200">
+                      <th
+                        class="px-4 py-3 text-left font-bold text-slate-700 bg-slate-50"
+                      >
+                        No
+                      </th>
+                      <th
+                        class="px-4 py-3 text-left font-bold text-slate-700 bg-slate-50"
+                      >
+                        Nama
+                      </th>
+                      <th
+                        class="px-4 py-3 text-left font-bold text-slate-700 bg-slate-50"
+                      >
+                        Satuan Kerja
+                      </th>
+                      <th
+                        class="px-4 py-3 text-left font-bold text-slate-700 bg-slate-50"
+                      >
+                        Peran
+                      </th>
+                      <th
+                        class="px-4 py-3 text-left font-bold text-slate-700 bg-slate-50"
+                      >
+                        Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Data akan diisi oleh JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="mt-4 text-sm text-slate-500">
+                Total: <span id="pesertaTotal">0</span> peserta
+              </div>
+            </div>
+
+            <div id="pesertaError" class="hidden text-center py-8">
+              <div
+                class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center text-red-400 text-3xl mx-auto mb-4"
+              >
+                <i class="fa-solid fa-exclamation-triangle"></i>
+              </div>
+              <h3 class="text-lg font-bold text-slate-700 mb-1">
+                Gagal Memuat Data
+              </h3>
+              <p class="text-slate-500 text-sm mb-4" id="pesertaErrorMsg">
+                Tidak dapat mengambil data dari spreadsheet
+              </p>
+              <button
+                id="retry-peserta"
+                class="px-4 py-2 bg-orange-500 text-white text-sm font-bold rounded-lg hover:bg-orange-600 transition-colors"
+              >
+                Coba Lagi
+              </button>
+            </div>
           </div>
-          <h3 class="text-lg font-bold text-slate-700 mb-1">
-            Tautan tidak ditemukan
-          </h3>
-          <p class="text-slate-500 text-sm max-w-sm mx-auto">
-            Kami tidak dapat menemukan tautan yang cocok dengan kata kunci Anda.
-          </p>
         </div>
 
         <!-- Footer -->
@@ -235,6 +354,181 @@
 
     <!-- JavaScript Data dan Logika -->
     <script>
+      // Fungsi untuk fetch data dari Google Sheets menggunakan CORS proxy
+      async function fetchGoogleSheetsData() {
+        try {
+          const sheetId = "1NilGlFr3daw2phQJMRr-HU-3mi3i0gOazyHvNZ-n9-8";
+          const gid = "0"; // ID sheet (GELOMBANG 1)
+
+          // Gunakan Google Sheets API CSV export
+          const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+
+          // Coba dengan CORS proxy jika diperlukan
+          let response;
+          try {
+            response = await fetch(csvUrl);
+          } catch (e) {
+            // Jika gagal, gunakan CORS proxy
+            response = await fetch(
+              `https://cors-anywhere.herokuapp.com/${csvUrl}`,
+            );
+          }
+
+          if (!response.ok) throw new Error("Network response was not ok");
+
+          const csvText = await response.text();
+          return parseCSV(csvText);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          throw error;
+        }
+      }
+
+      // Fungsi untuk parse CSV
+      function parseCSV(csvText) {
+        const rows = csvText.trim().split("\n");
+        const headers = rows[0]
+          .split(",")
+          .map((h) => h.trim().replace(/^"|"$/g, ""));
+        const data = [];
+
+        for (let i = 1; i < rows.length; i++) {
+          if (rows[i].trim() === "") continue;
+
+          const values = rows[i]
+            .split(",")
+            .map((v) => v.trim().replace(/^"|"$/g, ""));
+
+          const row = {};
+          headers.forEach((header, index) => {
+            row[header] = values[index] || "";
+          });
+
+          data.push(row);
+        }
+
+        return data;
+      }
+
+      // Render Peserta Table
+      function renderPesertaTable(data) {
+        const tableBody = document.querySelector("#pesertaTable tbody");
+        tableBody.innerHTML = "";
+
+        data.forEach((row, index) => {
+          const tr = document.createElement("tr");
+          tr.className =
+            "border-b border-slate-100 hover:bg-orange-50/30 transition-colors";
+
+          tr.innerHTML = `
+            <td class="px-4 py-3 text-slate-600 font-medium">${index + 1}</td>
+            <td class="px-4 py-3 font-medium text-slate-800">${row.Nama || ""}</td>
+            <td class="px-4 py-3 text-slate-600">${row["Satuan Kerja"] || row["Unit Kerja"] || "-"}</td>
+            <td class="px-4 py-3 text-slate-600">
+              <span class="px-2 py-1 rounded-full text-xs font-bold ${
+                (row.Peran || "").includes("Koordinator")
+                  ? "bg-purple-100 text-purple-700"
+                  : "bg-blue-100 text-blue-700"
+              }">
+                ${row.Peran || "-"}
+              </span>
+            </td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-1 rounded-full text-xs font-bold ${
+                (row.Status || "").toLowerCase().includes("aktif")
+                  ? "bg-green-100 text-green-700"
+                  : (row.Status || "").toLowerCase().includes("tidak")
+                    ? "bg-red-100 text-red-700"
+                    : "bg-slate-100 text-slate-700"
+              }">
+                ${row.Status || "-"}
+              </span>
+            </td>
+          `;
+
+          tableBody.appendChild(tr);
+        });
+
+        document.getElementById("pesertaTotal").textContent = data.length;
+      }
+
+      // Load Peserta Data
+      async function loadPesertaData() {
+        const loadingDiv = document.getElementById("pesertaLoading");
+        const containerDiv = document.getElementById("pesertaContainer");
+        const errorDiv = document.getElementById("pesertaError");
+
+        loadingDiv.classList.remove("hidden");
+        containerDiv.classList.add("hidden");
+        errorDiv.classList.add("hidden");
+
+        try {
+          const data = await fetchGoogleSheetsData();
+          renderPesertaTable(data);
+
+          loadingDiv.classList.add("hidden");
+          containerDiv.classList.remove("hidden");
+        } catch (error) {
+          console.error("Failed to load peserta data:", error);
+          document.getElementById("pesertaErrorMsg").textContent =
+            error.message ||
+            "Tidak dapat mengambil data dari spreadsheet. Periksa koneksi internet atau izin akses spreadsheet.";
+
+          loadingDiv.classList.add("hidden");
+          errorDiv.classList.remove("hidden");
+        }
+      }
+
+      // Tab Navigation
+      function setupTabNavigation() {
+        const tabButtons = document.querySelectorAll(".tab-button");
+        const tabContents = document.querySelectorAll(".tab-content");
+        const linksFilter = document.getElementById("links-filter");
+
+        tabButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const tabId = button.getAttribute("data-tab");
+
+            // Update buttons
+            tabButtons.forEach((btn) => {
+              btn.classList.remove(
+                "active",
+                "text-slate-700",
+                "border-orange-500",
+              );
+              btn.classList.add("text-slate-500", "border-transparent");
+            });
+            button.classList.add(
+              "active",
+              "text-slate-700",
+              "border-orange-500",
+            );
+            button.classList.remove("text-slate-500", "border-transparent");
+
+            // Update content
+            tabContents.forEach((content) => {
+              content.classList.add("hidden");
+            });
+
+            if (tabId === "links") {
+              document.getElementById("links-tab").classList.remove("hidden");
+              linksFilter.classList.remove("hidden");
+            } else if (tabId === "peserta") {
+              document.getElementById("peserta-tab").classList.remove("hidden");
+              linksFilter.classList.add("hidden");
+
+              // Load peserta data jika belum loaded
+              if (
+                document.querySelector("#pesertaTable tbody").children
+                  .length === 0
+              ) {
+                loadPesertaData();
+              }
+            }
+          });
+        });
+      }
+
       // Data Tautan (Ditambahkan tanggal sesuai tabel)
       const linkData = [
         {
@@ -380,6 +674,19 @@
           bgClass: "bg-blue-50",
           badgeClass: "bg-blue-100 text-blue-700",
         },
+        {
+          id: 12,
+          title: "Database Peserta Pelatihan Petugas SE 2026",
+          category: "Spreadsheet",
+          date: "29/05/2026",
+          dateVal: "2026-05-29",
+          desc: "Data lengkap peserta pelatihan petugas Sensus Ekonomi 2026.",
+          url: "https://docs.google.com/spreadsheets/d/1NilGlFr3daw2phQJMRr-HU-3mi3i0gOazyHvNZ-n9-8/edit?gid=0#gid=0",
+          icon: "fa-file-excel",
+          colorClass: "text-emerald-600",
+          bgClass: "bg-emerald-50",
+          badgeClass: "bg-emerald-100 text-emerald-700",
+        },
       ];
 
       let activeFilter = "Semua";
@@ -508,6 +815,17 @@
       // Event Listener
       searchInput.addEventListener("input", filterData);
       sortSelect.addEventListener("change", filterData);
+
+      // Setup Tab Navigation
+      setupTabNavigation();
+
+      // Peserta buttons
+      document
+        .getElementById("refresh-peserta")
+        ?.addEventListener("click", loadPesertaData);
+      document
+        .getElementById("retry-peserta")
+        ?.addEventListener("click", loadPesertaData);
 
       // Inisialisasi Awal
       renderFilters();
